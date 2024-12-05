@@ -36,7 +36,7 @@ jobs:
             -Dsonar.organization=baixium  # Sua organização no SonarCloud
             -Dsonar.projectKey=abnerbenicio_calculator-lib  # Chave única do seu projeto no SonarCloud
             -Dsonar.sources=src  # Diretório onde o código fonte está
-            -Dsonar.tests=tests  # Diretório de testes
+            -Dsonar.tests=src  # Diretório de testes
             -Dsonar.typescript.lcov.reportPaths=coverage/lcov-report.json  # Caminho do relatório de cobertura de testes em formato LCOV
             -Dsonar.test.inclusions=**/*.test.ts  # Inclusão dos arquivos de teste do TypeScript
 
