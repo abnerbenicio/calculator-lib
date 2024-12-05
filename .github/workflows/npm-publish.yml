@@ -34,7 +34,7 @@ jobs:
           projectBaseDir: .  # Diretório do projeto (geralmente o root)
           args: >
             -Dsonar.organization=baixium  # Sua organização no SonarCloud
-            -Dsonar.projectKey=abnerbenicio_calculadora-abner  # Defina um nome único para o seu projeto no SonarCloud
+            -Dsonar.projectKey=abnerbenicio_calculator-lib  # Defina um nome único para o seu projeto no SonarCloud
             -Dsonar.sources=src  # Diretório onde o código fonte está (pode ser 'src' ou outro, dependendo do seu projeto)
             -Dsonar.tests=tests  # Diretório de testes (ajuste conforme seu projeto)
             -Dsonar.typescript.lcov.reportPaths=coverage/lcov-report.json  # Caminho do relatório de cobertura de testes em formato LCOV
