@@ -26,7 +26,7 @@ jobs:
         with:
           node-version: '20'
       - name: SonarCloud Scan  # Ação do SonarCloud
-        uses: SonarSource/sonarcloud-github-action@master
+        uses: SonarSource/sonarcloud-github-action@v4.1.0  # Usando a versão estável
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Necessário para obter informações do PR, se houver
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}  # Token do SonarCloud, que você deve ter configurado no GitHub Secrets
@@ -34,9 +34,9 @@ jobs:
           projectBaseDir: .  # Diretório do projeto (geralmente o root)
           args: >
             -Dsonar.organization=baixium  # Sua organização no SonarCloud
-            -Dsonar.projectKey=abnerbenicio_calculator-lib  # Defina um nome único para o seu projeto no SonarCloud
-            -Dsonar.sources=src  # Diretório onde o código fonte está (pode ser 'src' ou outro, dependendo do seu projeto)
-            -Dsonar.tests=tests  # Diretório de testes (ajuste conforme seu projeto)
+            -Dsonar.projectKey=abnerbenicio_calculator-lib  # Chave única do seu projeto no SonarCloud
+            -Dsonar.sources=src  # Diretório onde o código fonte está
+            -Dsonar.tests=tests  # Diretório de testes
             -Dsonar.typescript.lcov.reportPaths=coverage/lcov-report.json  # Caminho do relatório de cobertura de testes em formato LCOV
             -Dsonar.test.inclusions=**/*.test.ts  # Inclusão dos arquivos de teste do TypeScript
 
