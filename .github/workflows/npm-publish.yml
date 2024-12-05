@@ -42,12 +42,13 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
           npx sonar-scanner \
+            -Dsonar.host.url=https://sonarcloud.io \
             -Dsonar.projectKey=abnerbenicio_calculator-lib \
             -Dsonar.organization=baixium \
             -Dsonar.sources=src \
             -Dsonar.tests=tests \
             -Dsonar.test.inclusions=**/*.test.ts \
-            -Dsonar.typescript.lcov.reportPaths=coverage/lcov.info
+            -Dsonar.typescript.lcov.reportPaths=coverage/lcov-report.json
 
   publish-npm:
     needs: build  # O job de publicação depende do sucesso do job de build
