@@ -16,29 +16,38 @@ jobs:
       - run: npm ci  # Instala as dependências
       - run: npm test  # Executa os testes
 
-  sonarcloud-analysis:
-    name: SonarCloud Analysis
+  sonarcloud:
     runs-on: ubuntu-latest
-    needs: build  # O job de análise depende que o job de build passe
+
     steps:
-      - uses: actions/checkout@v4  # Faz o checkout do código
-      - uses: actions/setup-node@v4  # Configura o Node.js
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
         with:
-          node-version: '20'
-      - name: SonarCloud Scan  # Ação do SonarCloud
-        uses: SonarSource/sonarcloud-github-action@master  # Usando a versão master
+          node-version: 18
+
+      - name: Set up Java 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run SonarCloud Scan
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Necessário para obter informações do PR, se houver
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}  # Token do SonarCloud, que você deve ter configurado no GitHub Secrets
-        with:
-          projectBaseDir: .  # Diretório do projeto (geralmente o root)
-          args: >
-            -Dsonar.organization=baixium  # Sua organização no SonarCloud
-            -Dsonar.projectKey=abnerbenicio_calculator-lib  # Chave única do seu projeto no SonarCloud
-            -Dsonar.sources=src  # Diretório onde o código fonte está
-            -Dsonar.tests=src  # Diretório de testes
-            -Dsonar.typescript.lcov.reportPaths=coverage/lcov-report.json  # Caminho do relatório de cobertura de testes em formato LCOV
-            -Dsonar.test.inclusions=**/*.test.ts  # Inclusão dos arquivos de teste do TypeScript
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: |
+          npx sonar-scanner \
+            -Dsonar.projectKey=abnerbenicio_calculator-lib \
+            -Dsonar.organization=baixium \
+            -Dsonar.sources=src \
+            -Dsonar.tests=tests \
+            -Dsonar.test.inclusions=**/*.test.ts \
+            -Dsonar.typescript.lcov.reportPaths=coverage/lcov.info
 
   publish-npm:
     needs: build  # O job de publicação depende do sucesso do job de build
