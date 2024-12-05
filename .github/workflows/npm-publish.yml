@@ -26,7 +26,7 @@ jobs:
         with:
           node-version: '20'
       - name: SonarCloud Scan  # Ação do SonarCloud
-        uses: SonarSource/sonarcloud-github-action@v4.1.0  # Usando a versão estável
+        uses: SonarSource/sonarcloud-github-action@master  # Usando a versão master
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Necessário para obter informações do PR, se houver
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}  # Token do SonarCloud, que você deve ter configurado no GitHub Secrets
