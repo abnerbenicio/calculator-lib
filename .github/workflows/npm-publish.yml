@@ -3,32 +3,56 @@ name: Calculadora Abner
 on:
   push:
     branches:
-      - main  # Define que o fluxo será disparado para commits na branch 'main' 
+      - main  # Define que o fluxo será disparado para commits na branch 'main'
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v4  # Faz o checkout do código
+      - uses: actions/setup-node@v4  # Configura a versão do Node.js
+        with:
+          node-version: '20'  # Versão do Node.js
+      - run: npm ci  # Instala as dependências
+      - run: npm test  # Executa os testes
+
+  sonarcloud-analysis:
+    name: SonarCloud Analysis
+    runs-on: ubuntu-latest
+    needs: build  # O job de análise depende que o job de build passe
+    steps:
+      - uses: actions/checkout@v4  # Faz o checkout do código
+      - uses: actions/setup-node@v4  # Configura o Node.js
         with:
           node-version: '20'
-      - run: npm ci
-      - run: npm test
+      - name: SonarCloud Scan  # Ação do SonarCloud
+        uses: SonarSource/sonarcloud-github-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Necessário para obter informações do PR, se houver
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}  # Token do SonarCloud, que você deve ter configurado no GitHub Secrets
+        with:
+          projectBaseDir: .  # Diretório do projeto (geralmente o root)
+          args: >
+            -Dsonar.organization=baixium  # Sua organização no SonarCloud
+            -Dsonar.projectKey=abnerbenicio_calculadora-abner  # Defina um nome único para o seu projeto no SonarCloud
+            -Dsonar.sources=src  # Diretório onde o código fonte está (pode ser 'src' ou outro, dependendo do seu projeto)
+            -Dsonar.tests=tests  # Diretório de testes (ajuste conforme seu projeto)
+            -Dsonar.typescript.lcov.reportPaths=coverage/lcov-report.json  # Caminho do relatório de cobertura de testes em formato LCOV
+            -Dsonar.test.inclusions=**/*.test.ts  # Inclusão dos arquivos de teste do TypeScript
 
   publish-npm:
-    needs: build
+    needs: build  # O job de publicação depende do sucesso do job de build
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v4  # Faz o checkout do código
+      - uses: actions/setup-node@v4  # Configura a versão do Node.js
         with:
           node-version: '20'
-          registry-url: https://registry.npmjs.org/
-      - run: npm ci
-      - run: npm publish --access=public
+          registry-url: https://registry.npmjs.org/  # URL do registro do NPM
+      - run: npm ci  # Instala as dependências
+      - run: npm publish --access=public  # Publica o pacote no NPM
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_KEY }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_KEY }}  # O token de autenticação do NPM
 
   # discord-notify:
   #   needs: publish-npm
