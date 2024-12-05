@@ -1,5 +1,5 @@
 import { describe, test, expect } from "vitest";
-import { add, subtract, multiply, divide } from "./calculator";
+import { add, subtract, multiply, divide } from "../src/calculator";
 
 describe("Addition", () => {
   test("adds two numbers", () => {
